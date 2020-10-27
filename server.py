@@ -7,20 +7,32 @@ PORT = 65432
 THREADCOUNT = 0
 
 def threaded_server(connection, addr):
-    print(addr)
-    connection.send(str.encode("Welcome to the Server you are Client #" + str(THREADCOUNT)))
+    #print(addr)
+    job_given = False
+    connection.send(str.encode("220 " + str(THREADCOUNT)))
+    print("220 Welcome to the Server you are Client #" + str(THREADCOUNT))
     while True:
-        print("Waiting for data from client #" + str(THREADCOUNT))
+        #print("Waiting for data from client #" + str(THREADCOUNT))
         data = connection.recv(2048)
-        reply = 'Server Says: ' + data.decode('utf-8')
         
         if not data:
-            print("Client #" + str(THREADCOUNT), "did not send any commands")
+            print("Server: Client #" + str(THREADCOUNT), "did not send any commands")
             break
+        
         elif data.decode('utf-8') == "QUIT":
-            print("221 Client #" + str(THREADCOUNT) + " with address of " + str(addr[0]), str(addr[1]) + " closing connection")
+            print("Server: 221 Client #" + str(THREADCOUNT) + " with address of " + str(addr[0]), str(addr[1]) + " closing connection")
             break
-        connection.sendall(str.encode(reply))
+        
+        elif data.decode('utf-8') == "REQUEST JOB" and not job_given:
+            connection.sendall(str.encode("250"))
+            job_given = True
+            print("Server: 250 job send to Client #" + str(THREADCOUNT) + " with address of " + str(addr[0]), str(addr[1]))
+        
+        elif data.decode('utf-8') == "REQUEST JOB" and job_given:
+            connection.sendall(str.encode("452"))
+            print("Server: 452 job is already sent to Client #" + str(THREADCOUNT) + " with address of " + str(addr[0]), str(addr[1]))
+            
+        
     connection.close()
         
         
