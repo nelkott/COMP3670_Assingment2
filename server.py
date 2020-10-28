@@ -1,14 +1,18 @@
 import socket
 from _thread import *
 import threading
+import random
 
 HOST = '127.0.0.1'
 PORT = 65432
 THREADCOUNT = 0
+CLIENT_WITH_JOB = set()
+JOBS = ['3+3', '5*6+9']
 
 def threaded_server(connection, addr):
-    #print(addr)
+    print(addr)
     job_given = False
+    current_job = None
     connection.send(str.encode("220 " + str(THREADCOUNT)))
     print("220 Welcome to the Server you are Client #" + str(THREADCOUNT))
     while True:
@@ -24,14 +28,22 @@ def threaded_server(connection, addr):
             break
         
         elif data.decode('utf-8') == "REQUEST JOB" and not job_given:
-            connection.sendall(str.encode("250"))
+            current_job = random.choice(JOBS)
+            connection.sendall(str.encode("250 " + str(current_job)))
             job_given = True
             print("Server: 250 job send to Client #" + str(THREADCOUNT) + " with address of " + str(addr[0]), str(addr[1]))
         
         elif data.decode('utf-8') == "REQUEST JOB" and job_given:
             connection.sendall(str.encode("452"))
             print("Server: 452 job is already sent to Client #" + str(THREADCOUNT) + " with address of " + str(addr[0]), str(addr[1]))
-            
+        
+        elif data.decode('utf-8') == "SEND JOB":
+            answer = connection.recv(2048)
+            print("HI")
+            print("HI")
+            job_given = False
+            if eval(current_job) == answer.decode('utf-8'):
+                print("Server: Correct Answer")
         
     connection.close()
         
