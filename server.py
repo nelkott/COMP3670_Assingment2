@@ -39,10 +39,8 @@ def threaded_server(connection, addr):
         
         elif data.decode('utf-8') == "SEND JOB":
             answer = connection.recv(2048)
-            print("HI")
-            print("HI")
             job_given = False
-            if eval(current_job) == answer.decode('utf-8'):
+            if int(eval(current_job)) == int(answer.decode('utf-8')):
                 print("Server: Correct Answer")
         
     connection.close()
