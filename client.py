@@ -36,11 +36,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
             if JOB != None:
                 print("Client: Client #" + str(CLIENT_NUM) + " the current job is: " + JOB)
                 answer = input("Client: Please enter your answer: ")
-                print("HELLO")
                 client.sendall(str.encode(command))
-                print("ASDA")
                 client.sendall(str.encode(answer))
-                print("GSC")
             else:
                 print("NO JOB TAKEN")
         
