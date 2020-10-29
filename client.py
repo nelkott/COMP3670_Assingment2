@@ -50,6 +50,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
                   CURRENT JOB - shows the current job given
                   SEND JOB - send the server""")
             continue
+        
+        else:
+            print("Client: Client #" + str(CLIENT_NUM) + " invalid command try again!")
             
             
         Response = client.recv(1024)
