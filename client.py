@@ -50,7 +50,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
                   CURRENT JOB - shows the current job given
                   SEND JOB - send the server""")
             continue
-            
+        
+        else:
+            print("Client: Client #" + str(CLIENT_NUM) + " invalid command try again!")
+            continue
             
         Response = client.recv(1024)
         
@@ -59,7 +62,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
             print("Client: 250 Client #" + str(CLIENT_NUM) + " Job recieved and job is: " + JOB)
             
         elif Response.decode('utf-8')[:3] == '452':
-            print("Client: 250 Client #" + str(CLIENT_NUM) + " you already haave a job taken")
+            print("Client: 452 Client #" + str(CLIENT_NUM) + " you already haave a job taken")
         
+        elif Response.decode('utf-8') == "251":
+            print("Client: 251 Client #" + str(CLIENT_NUM) + " job was correctly done")
+        
+        elif Response.decode('utf-8') == "453":
+            print("Client: 453 Client #" + str(CLIENT_NUM) + " job was not correctly done")
         
     client.close()
