@@ -41,8 +41,13 @@ def threaded_server(connection, addr):
             answer = connection.recv(2048)
             job_given = False
             if int(eval(current_job)) == int(answer.decode('utf-8')):
-                print("Server: Correct Answer")
-        
+                connection.sendall(str.encode("251"))
+                print("Server: 251 Client #" + str(THREADCOUNT) + " with address of " + str(addr[0]), str(addr[1]) + " got the right answer")
+            else:
+                connection.sendall(str.encode("453"))
+                print("Server: 251 Client #" + str(THREADCOUNT) + " with address of " + str(addr[0]), str(addr[1]) + " got the wrong answer")
+            current_job = None
+            
     connection.close()
         
         
